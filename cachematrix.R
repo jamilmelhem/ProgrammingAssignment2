@@ -1,15 +1,67 @@
-## Put comments here that give an overall description of what your
-## functions do
+# Test instructions:
+#  1. m <- matrix(rnorm(20),6,6) 
+#  2. m
+#   [,1]       [,2]       [,3]        [,4]        [,5]       [,6]
+#   [1,] -2.5581960  1.7230140 -0.7141790 -0.34784239  1.54275390  0.4833297
+#   [2,]  0.5462031 -0.1025103 -0.5700218 -0.09666500  0.08375066 -1.3414368
+#   [3,]  1.4153361  1.1411487  0.5429041 -0.07065593 -1.48647539 -1.2058168
+#   [4,]  0.2662191  2.0210192 -0.6915660 -1.28994829 -0.89969065  1.2896889
+#   [5,] -1.0063231 -0.8293550 -0.7330134 -0.69034302  0.22835092 -1.0845255
+#   [6,] -0.4415501  1.7230346 -0.6538414 -1.10033154 -0.27919664 -0.7067183
+#  3. m1 <- makeCacheMatrix(m)
+#  4. cacheSolve(m1)
+#   store inverse in cache
+#   [,1]        [,2]       [,3]        [,4]        [,5]        [,6]
+#   [1,] -0.73105098  0.24432145 -0.9055606 -0.39885132 -0.97208412  1.34525407
+#   [2,]  0.25791935  0.15933422  0.2070812  0.04074789 -0.27381928  0.01519336
+#   [3,] -1.25670564 -1.57000176 -1.2350435 -1.57893737 -1.23357822  3.23948047
+#   [4,]  1.69494379  1.19334437  1.9589499  1.26559510  1.12456633 -3.86449716
+#   [5,] -1.06055876 -0.20246184 -1.8269132 -1.25763608 -1.61342595  2.95698456
+#   [6,]  0.02828584 -0.08965017 -0.1149613  0.33570811 -0.03246612 -0.36687453
+#  5. cacheSolve(m1)
+#   get inverse from cache
+#   [,1]        [,2]       [,3]        [,4]        [,5]        [,6]
+#   [1,] -0.73105098  0.24432145 -0.9055606 -0.39885132 -0.97208412  1.34525407
+#   [2,]  0.25791935  0.15933422  0.2070812  0.04074789 -0.27381928  0.01519336
+#   [3,] -1.25670564 -1.57000176 -1.2350435 -1.57893737 -1.23357822  3.23948047
+#   [4,]  1.69494379  1.19334437  1.9589499  1.26559510  1.12456633 -3.86449716
+#   [5,] -1.06055876 -0.20246184 -1.8269132 -1.25763608 -1.61342595  2.95698456
+#   [6,]  0.02828584 -0.08965017 -0.1149613  0.33570811 -0.03246612 -0.36687453
 
-## Write a short comment describing this function
 
 makeCacheMatrix <- function(x = matrix()) {
-
+  
+  inverse <- NULL
+  set <- function(y) {
+    x <<- y
+    inverse <<- NULL
+  }
+  
+  get <- function() x
+  
+  setinverse <- function(inv) inverse <<- inv
+  
+  getinverse <- function() inverse
+  
+  list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)
+  
 }
-
-
-## Write a short comment describing this function
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  
+  inverse <- x$getinverse()
+  
+  #return inverse from cache if exists
+  if(!is.null(inverse)) {
+    message("get inverse from cache")
+    return(inverse)
+  }
+  
+  inverse <- solve(x$get(), ...)
+  
+  message("store inverse in cache")
+  x$setinverse(inverse)
+  
+  inverse
 }
+
